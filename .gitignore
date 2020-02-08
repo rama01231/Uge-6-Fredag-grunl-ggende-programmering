@@ -1,52 +1,252 @@
-# Prerequisites
-*.d
+using System;
+using System.Text.RegularExpressions;
+using System.Text;
+namespace uge6fredag
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            FirstMain();
+        }
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+        public static void FirstMain()
+        {
+            Console.WriteLine("Hvad vil du convert fra? Du kan vælge mellem: 1.Binære, 2.Hexadecimal og 3.Decimaltal" +
+                "\nEller tast enter for at afslutte");
+            string svarcon = Console.ReadLine();
+            if (svarcon == "Binære" || svarcon == "binære" || svarcon == "1")
+            {
+                BinaryCon();
+            }
+            else if (svarcon == "Hexadecimal" || svarcon == "hexadecimal" || svarcon == "2")
+            {
+                HexaCon();
+            }
+            else if (svarcon == "Decimaltal" || svarcon == "decimaltal" || svarcon == "3")
+            {
+                DecCon();
+            }
+            else
+            {
+                Console.Clear();
+                Environment.Exit(0);
+            }
+        }
 
-# Linker output
-*.ilk
-*.map
-*.exp
+        public static void BinaryCon()
+        {
+            Console.Write("Skriv dit binæretal som skal konverteres: ");
+            string bin = Console.ReadLine();
+            int numVal = -1;
+            int dec = 0;
+            int base1 = 1;
+            //Her konvertere jeg string til integer
+            try
+            {
+                numVal = Convert.ToInt16(bin);
+            }
+            catch (FormatException)
+            {
 
-# Precompiled Headers
-*.gch
-*.pch
+            }
+            //Det her er formlen for Binære til decimal
+            while (numVal > 0)
+            {
+                int reminder = numVal % 10;
+                numVal = numVal / 10;
+                dec += reminder * base1;
+                base1 = base1 * 2;
+            }
+            //Her outputer jeg decimal værdien
+            Console.WriteLine("Decimal: " + dec);
+            //---------------------------------------------------------------------------------------------------------------------------
+            StringBuilder result = new StringBuilder(bin.Length / 8 + 1);
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+            int mod4Len = bin.Length % 8;
+            if (mod4Len != 0)
+            {
+                //Her fortæller jeg den at den skal omregne fra dec til binære og den tjekker om der er 0´er til højre.
+                bin = bin.PadLeft(((bin.Length / 8) + 1) * 8, '0');
+            }
+            //Her skriver den det så om til binære tal
+            for (int i = 0; i < bin.Length; i += 8)
+            {
+                string eightBits = bin.Substring(i, 8);
+                result.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+            }
+            //her udskriver den binære tal
+            Console.Write("Hexadecimal: " + result);
+            Console.ReadKey();
+            Console.Clear();
+            FirstMain();
+        }
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+        public static void HexaCon()
+        {
+            Console.WriteLine("Hexadeciamler");
+            //Hexa tester
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+            string Temp;
+            UInt32 Dec = new UInt32();
+            Boolean ok = false;
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+            //Hexadeciamler til Decimaler
+            Console.WriteLine("Skriv Dit hexadecimaler");
+            string hax = Console.ReadLine();
+            do
+            {
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+                int svar;
+                int decv = 0;
+                //Det her tjekker om det brugeren har skrevet er tal fra 0-9 og bogstaver mellem a-f
+                if (Regex.IsMatch(hax, "^[0-9, a-f,A-F]+$"))
+                {//Her siger den hvis brugeren har skrvet med stort bliver det med småt så der ikke kommer fejl
+                    hax = hax.ToLower();
+                    ok = true;
+                    for (int i = hax.Length - 1; i >= 0; i--)
+                    {
+                        char C = hax[i];
+                        //Det her er er formlen for hexadecimal til decimaltal 
+                        int m = hax.Length - 1 - i;
+                        //I switchen fortæller jeg formlen for hvert et tegn 0-9 og a-f
+                        switch (C)
+                        {
+                            case '0':
+                                break;
+                            case '1':
+                                decv += 1 * (int)Math.Pow(16, m);
+                                break;
+                            case '2':
+                                decv += 2 * (int)Math.Pow(16, m);
+                                break;
+                            case '3':
+                                decv += 3 * (int)Math.Pow(16, m);
+                                break;
+                            case '4':
+                                decv += 4 * (int)Math.Pow(16, m);
+                                break;
+                            case '5':
+                                decv += 5 * (int)Math.Pow(16, m);
+                                break;
+                            case '6':
+                                decv += 6 * (int)Math.Pow(16, m);
+                                break;
+                            case '7':
+                                decv += 7 * (int)Math.Pow(16, m);
+                                break;
+                            case '8':
+                                decv += 8 * (int)Math.Pow(16, m);
+                                break;
+                            case '9':
+                                decv += 9 * (int)Math.Pow(16, m);
+                                break;
+                            case 'a':
+                                decv += 10 * (int)Math.Pow(16, m);
+                                break;
+                            case 'b':
+                                decv += 11 * (int)Math.Pow(16, m);
+                                break;
+                            case 'c':
+                                decv += 12 * (int)Math.Pow(16, m);
+                                break;
+                            case 'd':
+                                decv += 13 * (int)Math.Pow(16, m);
+                                break;
+                            case 'e':
+                                decv += 14 * (int)Math.Pow(16, m);
+                                break;
+                            case 'f':
+                                decv += 15 * (int)Math.Pow(16, m);
+                                break;
+                            default:
+                                break;
+                        }
+
+
+
+                    }
+                    Console.WriteLine("Decimaltal " + decv);
+
+                }
+                else
+                {
+                    ok = false;
+                    Console.WriteLine("Idiot du skal bruge tallene 0-9 og bogstaverne a-f eller A-F");
+                    Console.ReadKey(true);
+                    Console.Clear();
+                }
+                //-----------------------------------------------------------------------------------------------------
+                int d;
+                int[] a = new int[15];
+
+                for (d = 0; decv > 0; d++)
+                {
+                    a[d] = decv % 2;
+                    decv = decv / 2;
+                }
+                Console.WriteLine("Binær: ");
+                for (d = d - 1; d >= 0; d--)
+                {
+                    Console.Write(a[d]);
+                }
+                Console.ReadKey();
+                Console.Clear();
+            } while (!ok);
+            
+            FirstMain();
+        }
+
+        public static void DecCon()
+        {
+            Console.WriteLine("Decimaltal");
+            int i, n;
+            int[] z= new int[15];
+            Console.WriteLine("Indtast decimaltal: ");
+            n = int.Parse(Console.ReadLine());
+            int v = n;
+            for (i = 0; n > 0; i++)
+            {
+                z[i] = n % 2;
+                n = n / 2;
+            }
+            Console.Write("Binære: ");
+            for (i = i + 0; i > 0; i--)
+            {
+                Console.Write(z[i]);
+                
+            }
+            Console.WriteLine();
+            
+
+            //--------------------------------------------------------
+            int quotient;
+            int k = 1, j, temp = 0;
+            char[] hexadecimalNumber = new char[100];
+            char temp1;
+
+            quotient = v;
+            while (quotient != 0)
+            {
+                temp = quotient % 16;
+                if (temp < 10)
+                    temp = temp + 48;
+                else
+                    temp = temp + 55;
+                temp1 = Convert.ToChar(temp);
+                hexadecimalNumber[k++] = temp1;
+                quotient = quotient / 16;
+            }
+
+            Console.Write("Hexadecimal: ");
+            for (j = k - 1; j > 0; j--)
+            {
+                Console.Write(hexadecimalNumber[j]);
+
+            }
+            Console.ReadKey();
+            Console.Clear();
+            FirstMain();
+        }
+    }
+}
